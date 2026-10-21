@@ -42,7 +42,11 @@ app.post('/api/register', async (req, res) => {
             [username, hashedPassword, email || null]
         );
         
-        const token = jwt.sign({ id: result.insertId, username }, process.env.JWT_SECRET, { expiresIn: '7d' });
+       const token = jwt.sign(
+    { id: result.insertId, username },
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' }
+);
         
         res.json({ 
             success: true, 
@@ -80,7 +84,11 @@ app.post('/api/login', async (req, res) => {
             return res.json({ success: false, message: 'Invalid username or password' });
         }
         
-        const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '7d' });
+     const token = jwt.sign(
+    { id: user.id, username: user.username },
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' }
+);
         
         res.json({ 
             success: true, 
