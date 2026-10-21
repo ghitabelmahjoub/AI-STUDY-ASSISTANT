@@ -1,10 +1,11 @@
-﻿.env
+.env
 .env.*
 !.env.example
 
 .gradle/
 build/
 local.properties
-.idea/caches/ 
+.idea/caches/
+.idea/gradle.xml
 backend/.env
 backend/node_modules/
