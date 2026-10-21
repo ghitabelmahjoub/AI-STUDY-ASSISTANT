@@ -1,55 +1,34 @@
 # AI Study Assistant 📚
 
-An Android study assistant application built with **Java, Node.js, Express.js, and MySQL**. The project combines a mobile chat interface with a REST API backend, user registration, and token-based authentication.
+An Android study assistant application built with **Java, Android SDK, Node.js, Express.js, and MySQL**. It combines a mobile chat interface with a backend REST API for user registration and authentication.
 
-This project demonstrates Android development, API integration, backend authentication, and relational database management.
+## Features
 
-## ✨ Features
+- User registration and login
+- Password hashing with bcryptjs
+- JWT-based authentication
+- Android chat interface
+- REST API integration using Retrofit
+- MySQL database integration
+- Environment-based backend configuration
 
-- **User Registration:** Create an account with a username, password, and email.
-- **User Login:** Authenticate users using their credentials.
-- **Password Hashing:** Hash passwords using `bcryptjs` before storing them in MySQL.
-- **JWT Authentication:** Issue JSON Web Tokens after successful registration or login.
-- **Chat Interface:** Display chat messages using Android UI components.
-- **REST API:** Connect the Android application to the Node.js backend.
-- **MySQL Integration:** Store and retrieve user account information.
-- **Environment-Based Configuration:** Keep database credentials and JWT secrets outside the source code.
-
-## 🛠️ Technologies Used
+## Technologies
 
 | Component | Technologies |
 |---|---|
-| Android application | Java, Android SDK |
-| API communication | Retrofit |
+| Mobile app | Java, Android SDK |
+| API integration | Retrofit |
 | Backend | Node.js, Express.js |
-| Database | MySQL, `mysql2` |
-| Authentication | `bcryptjs`, `jsonwebtoken` |
-| Configuration | `dotenv` |
-| Development tools | Android Studio, Gradle, npm |
+| Database | MySQL, mysql2 |
+| Authentication | bcryptjs, jsonwebtoken |
+| Configuration | dotenv |
+| Tools | Android Studio, Gradle, npm |
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```text
 AI-STUDY-ASSISTANT/
 ├── app/
-│   └── src/
-│       ├── main/
-│       │   ├── assets/
-│       │   ├── java/
-│       │   │   └── com/example/aistudyassistant/
-│       │   │       ├── ApiService.java
-│       │   │       ├── AuthResponse.java
-│       │   │       ├── ChatMessage.java
-│       │   │       ├── LoginActivity.java
-│       │   │       ├── LoginRequest.java
-│       │   │       ├── MainActivity.java
-│       │   │       ├── MessageAdapter.java
-│       │   │       ├── RegisterActivity.java
-│       │   │       ├── RegisterRequest.java
-│       │   │       └── RetrofitClient.java
-│       │   ├── res/
-│       │   └── AndroidManifest.xml
-│       └── test/
 ├── backend/
 │   ├── .env.example
 │   ├── package.json
@@ -57,51 +36,24 @@ AI-STUDY-ASSISTANT/
 │   └── server.js
 ├── gradle/
 ├── build.gradle.kts
-├── gradle.properties
 ├── settings.gradle.kts
 └── README.md
 ```
 
-## 🔌 Backend API
-
-The backend exposes the following authentication endpoints:
+## Backend API
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/api/register` | Register a new user |
-| `POST` | `/api/login` | Authenticate an existing user |
+| POST | `/api/register` | Register a new user |
+| POST | `/api/login` | Authenticate a user |
 
-### Registration
+Successful authentication returns a response containing a JWT and user information.
 
-Example JSON request:
-
-```json
-{
-  "username": "student123",
-  "password": "your_password",
-  "email": "student@example.com"
-}
-```
-
-### Login
-
-Example JSON request:
-
-```json
-{
-  "username": "student123",
-  "password": "your_password"
-}
-```
-
-Successful authentication returns a response containing a success status, a JWT, the user ID, and the username.
-
-## ⚙️ Setup and Installation
+## Setup
 
 ### Prerequisites
 
-- Android Studio
-- A JDK compatible with the project's Gradle configuration
+- Android Studio and a compatible JDK
 - Node.js and npm
 - MySQL Server
 
@@ -112,7 +64,7 @@ git clone https://github.com/ghitabelmahjoub/AI-STUDY-ASSISTANT.git
 cd AI-STUDY-ASSISTANT
 ```
 
-### 2. Configure the MySQL database
+### 2. Configure the database
 
 Create the database in MySQL:
 
@@ -120,7 +72,7 @@ Create the database in MySQL:
 CREATE DATABASE ai_study_assistant;
 ```
 
-Create the users table:
+If you haven't created the users table yet, use:
 
 ```sql
 USE ai_study_assistant;
@@ -133,37 +85,30 @@ CREATE TABLE users (
 );
 ```
 
-If the table already exists, check its structure before running the creation statement again.
+If the table already exists, do not create it again.
 
 ### 3. Configure the backend
 
-Open a terminal in the backend directory:
+In PowerShell:
 
-```bash
+```powershell
 cd backend
+Copy-Item .env.example .env
 npm install
 ```
 
-Create your local environment file by copying the provided template.
-
-**Windows PowerShell:**
-
-```powershell
-Copy-Item .env.example .env
-```
-
-Edit `backend/.env` and enter your own local database credentials and a strong, randomly generated JWT secret:
+Edit `backend/.env` with your local MySQL credentials and a strong, private JWT secret.
 
 ```env
 DB_HOST=localhost
 DB_USER=your_mysql_username
 DB_PASSWORD=your_mysql_password
 DB_NAME=ai_study_assistant
-JWT_SECRET=your_generated_random_secret
+JWT_SECRET=your_private_random_secret
 PORT=3000
 ```
 
-Keep the `.env` file private. Never commit database passwords, JWT secrets, or other credentials to GitHub.
+Never commit your `.env` file or share its secrets.
 
 ### 4. Start the backend
 
@@ -173,47 +118,35 @@ From the `backend` directory, run:
 node server.js
 ```
 
-By default, the API listens on port `3000`.
+The API runs on port `3000` by default.
 
-The available authentication endpoints are:
+### 5. Run the Android app
 
-- `http://localhost:3000/api/register`
-- `http://localhost:3000/api/login`
+1. Open the project in Android Studio.
+2. Sync Gradle and run the app.
+3. Ensure the backend is running.
+4. Check the base URL in `RetrofitClient.java`.
 
-These endpoints accept POST requests.
+For the standard Android emulator, use `10.0.2.2` to access your computer's localhost. For a physical device, use your computer's local network IP address.
 
-### 5. Run the Android application
+## Security
 
-1. Open the repository in Android Studio.
-2. Allow Gradle to synchronize the project.
-3. Confirm that the backend is running.
-4. Configure the API base URL in `RetrofitClient.java` for your testing environment.
-5. Run the application on an Android emulator or compatible Android device.
+- Passwords are hashed before database storage.
+- JWTs are used for authentication.
+- Database credentials and JWT secrets are loaded from environment variables.
+- The local `.env` file should remain excluded from Git.
 
-**Networking note:** An Android emulator commonly reaches the host computer through `10.0.2.2` rather than `localhost`. For a physical device, configure the computer's reachable local network IP and ensure the required network permissions and firewall rules are in place.
+For production deployment, use HTTPS, validate inputs, and securely manage tokens and secrets.
 
-## 🔒 Security Considerations
+## Future Improvements
 
-- Passwords are hashed before being stored in the database.
-- JWTs are issued following successful authentication.
-- Database credentials and signing secrets are configured through environment variables.
-- Local environment files must remain excluded from version control.
-- Production deployments should use HTTPS, suitable token validation, input validation, and appropriate error handling.
+- Connect the chat interface to an AI question-answering service.
+- Improve session and token management.
+- Add automated tests and more detailed error handling.
+- Add screenshots demonstrating the application.
 
-## 🚀 Future Improvements
-
-- Integrate an AI-powered question-and-answer service into the chat interface.
-- Improve token storage and session management in the Android application.
-- Add automated backend tests.
-- Strengthen input validation and API error handling.
-- Add application screenshots and a demonstration of the main user flows.
-
-## 👩‍💻 Author
+## Author
 
 **Ghita Belmahjoub**
 
 GitHub: [@ghitabelmahjoub](https://github.com/ghitabelmahjoub)
-
----
-
-*This project demonstrates Android application development, REST API integration, backend authentication, and relational database connectivity.*
