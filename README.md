@@ -1,34 +1,31 @@
 # AI Study Assistant 📚
 
-An Android-based study assistant project with a Java mobile application and a Node.js backend. The project includes a chat interface, user registration and login, and MySQL database integration.
+An Android study assistant application built with **Java, Node.js, Express.js, and MySQL**. The project combines a mobile chat interface with a REST API backend, user registration, and token-based authentication.
+
+This project demonstrates Android development, API integration, backend authentication, and relational database management.
 
 ## ✨ Features
 
-- **User Registration:** Create an account with a username, password, and optional email.
+- **User Registration:** Create an account with a username, password, and email.
 - **User Login:** Authenticate users using their credentials.
-- **Password Security:** Hash passwords using `bcryptjs` before storing them in the database.
-- **Token-Based Authentication:** Generate JSON Web Tokens (JWTs) upon successful registration or login.
-- **Chat Interface:** Android chat components for displaying messages.
-- **Backend API:** REST endpoints connecting the Android application to the backend.
-- **Database Integration:** MySQL connection for storing and retrieving user information.
+- **Password Hashing:** Hash passwords using `bcryptjs` before storing them in MySQL.
+- **JWT Authentication:** Issue JSON Web Tokens after successful registration or login.
+- **Chat Interface:** Display chat messages using Android UI components.
+- **REST API:** Connect the Android application to the Node.js backend.
+- **MySQL Integration:** Store and retrieve user account information.
+- **Environment-Based Configuration:** Keep database credentials and JWT secrets outside the source code.
 
 ## 🛠️ Technologies Used
 
-### Android Application
-- Java
-- Android SDK
-- Gradle
-- Retrofit for HTTP API communication
-
-### Backend
-- Node.js
-- Express.js
-- MySQL
-- `mysql2`
-- `bcryptjs`
-- `jsonwebtoken`
-- `dotenv`
-- `cors`
+| Component | Technologies |
+|---|---|
+| Android application | Java, Android SDK |
+| API communication | Retrofit |
+| Backend | Node.js, Express.js |
+| Database | MySQL, `mysql2` |
+| Authentication | `bcryptjs`, `jsonwebtoken` |
+| Configuration | `dotenv` |
+| Development tools | Android Studio, Gradle, npm |
 
 ## 🏗️ Project Structure
 
@@ -54,6 +51,7 @@ AI-STUDY-ASSISTANT/
 │       │   └── AndroidManifest.xml
 │       └── test/
 ├── backend/
+│   ├── .env.example
 │   ├── package.json
 │   ├── package-lock.json
 │   └── server.js
@@ -66,7 +64,7 @@ AI-STUDY-ASSISTANT/
 
 ## 🔌 Backend API
 
-The backend exposes the following endpoints:
+The backend exposes the following authentication endpoints:
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -75,7 +73,7 @@ The backend exposes the following endpoints:
 
 ### Registration
 
-Example request:
+Example JSON request:
 
 ```json
 {
@@ -87,7 +85,7 @@ Example request:
 
 ### Login
 
-Example request:
+Example JSON request:
 
 ```json
 {
@@ -96,33 +94,33 @@ Example request:
 }
 ```
 
-Successful authentication returns a response containing a JWT, the user's ID, and username.
+Successful authentication returns a response containing a success status, a JWT, the user ID, and the username.
 
 ## ⚙️ Setup and Installation
 
 ### Prerequisites
 
 - Android Studio
-- JDK compatible with the project's Gradle configuration
+- A JDK compatible with the project's Gradle configuration
 - Node.js and npm
 - MySQL Server
 
-### 1. Clone the Repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/ghitabelmahjoub/AI-STUDY-ASSISTANT.git
 cd AI-STUDY-ASSISTANT
 ```
 
-### 2. Configure the MySQL Database
+### 2. Configure the MySQL database
 
-Create the database:
+Create the database in MySQL:
 
 ```sql
 CREATE DATABASE ai_study_assistant;
 ```
 
-Create a `users` table matching the fields used by the backend:
+Create the users table:
 
 ```sql
 USE ai_study_assistant;
@@ -135,59 +133,79 @@ CREATE TABLE users (
 );
 ```
 
-### 3. Configure Backend Environment Variables
+If the table already exists, check its structure before running the creation statement again.
 
-Navigate to the backend directory:
+### 3. Configure the backend
+
+Open a terminal in the backend directory:
 
 ```bash
 cd backend
 npm install
 ```
 
-Create a local `.env` file with your own database credentials and JWT secret:
+Create your local environment file by copying the provided template.
+
+**Windows PowerShell:**
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Edit `backend/.env` and enter your own local database credentials and a strong, randomly generated JWT secret:
 
 ```env
 DB_HOST=localhost
 DB_USER=your_mysql_username
 DB_PASSWORD=your_mysql_password
 DB_NAME=ai_study_assistant
-JWT_SECRET=replace_with_a_long_random_secret
+JWT_SECRET=your_generated_random_secret
 PORT=3000
 ```
 
-**Important:** Configure `server.js` to read these environment variables instead of using hardcoded credentials. Never commit `.env` or publish real passwords, API keys, or JWT secrets.
+Keep the `.env` file private. Never commit database passwords, JWT secrets, or other credentials to GitHub.
 
-### 4. Start the Backend
+### 4. Start the backend
+
+From the `backend` directory, run:
 
 ```bash
 node server.js
 ```
 
-The server is configured to use port `3000` by default.
+By default, the API listens on port `3000`.
 
-### 5. Run the Android Application
+The available authentication endpoints are:
+
+- `http://localhost:3000/api/register`
+- `http://localhost:3000/api/login`
+
+These endpoints accept POST requests.
+
+### 5. Run the Android application
 
 1. Open the repository in Android Studio.
 2. Allow Gradle to synchronize the project.
-3. Configure the API base URL in `RetrofitClient.java` to point to your running backend.
-4. Run the application on an Android emulator or compatible device.
+3. Confirm that the backend is running.
+4. Configure the API base URL in `RetrofitClient.java` for your testing environment.
+5. Run the application on an Android emulator or compatible Android device.
 
-For the Android emulator, the host machine is usually reachable at `10.0.2.2` rather than `localhost`. For a physical device, configure the appropriate computer LAN IP and ensure both devices can communicate.
+**Networking note:** An Android emulator commonly reaches the host computer through `10.0.2.2` rather than `localhost`. For a physical device, configure the computer's reachable local network IP and ensure the required network permissions and firewall rules are in place.
 
 ## 🔒 Security Considerations
 
-- Passwords are hashed before being stored in MySQL.
-- JWTs are used to represent successful authentication.
-- Keep database credentials and signing secrets outside the source code.
-- Use HTTPS and appropriate token validation for production deployments.
-- Validate inputs and return appropriate HTTP status codes from the backend.
+- Passwords are hashed before being stored in the database.
+- JWTs are issued following successful authentication.
+- Database credentials and signing secrets are configured through environment variables.
+- Local environment files must remain excluded from version control.
+- Production deployments should use HTTPS, suitable token validation, input validation, and appropriate error handling.
 
 ## 🚀 Future Improvements
 
-- Integrate and document the AI-powered question-answering functionality.
-- Add secure token storage and session handling in the Android application.
-- Improve API error handling and input validation.
+- Integrate an AI-powered question-and-answer service into the chat interface.
+- Improve token storage and session management in the Android application.
 - Add automated backend tests.
+- Strengthen input validation and API error handling.
 - Add application screenshots and a demonstration of the main user flows.
 
 ## 👩‍💻 Author
