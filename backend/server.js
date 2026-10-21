@@ -11,10 +11,10 @@ app.use(express.json());
 
 // Database connection
 const db = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD,
-    database: 'ai_study_assistant',
+    database: process.env.DB_NAME || 'ai_study_assistant',
     waitForConnections: true,
     connectionLimit: 10
 });
